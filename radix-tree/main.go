@@ -19,6 +19,7 @@ type Node struct {
 	Route    Route   `json:"route"`
 }
 
+// set pattern and route on Radix-tree
 func (n *Node) insert(pattern string, route Route) {
 	parts := strings.Split(pattern, "/")[1:]
 
@@ -31,8 +32,10 @@ func (n *Node) insert(pattern string, route Route) {
 			}
 			n.Children = append(n.Children, child)
 		}
+		// down a pattern layer
 		n = child
 	}
+	// handler sets only lowest layer
 	n.Route = route
 }
 
@@ -50,6 +53,7 @@ func (n *Node) search(path string) Route {
 }
 
 func (n *Node) matchChild(part string) *Node {
+	// why doesn't "range" return i, child ?
 	for i := range n.Children {
 		if n.Children[i].Part == part || n.Children[i].IsWild {
 			return n.Children[i]
